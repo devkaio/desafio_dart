@@ -31,10 +31,12 @@ class Console {
 
     final endereco = _cadastraEndereco(Empresa);
 
-    Socio? socio;
+    Socio socio;
 
     print("O Sócio é (1) Pessoa Física ou (2) Pessoa Jurídica?");
+
     String input = stdin.readLineSync()!;
+
     while (input.isNotEmpty) {
       if (input == "1") {
         socio = _cadastrarSocio(SocioPF);
@@ -109,12 +111,15 @@ class Console {
           mostrarDadosEmpresa(element);
         }
       }
-    } else {
+    } else if (input.length == 14) {
       for (var element in _listaEmpresas) {
         if (element.socio!.documento == input) {
           mostrarDadosEmpresa(element);
         }
       }
+    } else {
+      print(
+          "Não foi possível encontrar o sócio com esses dados. Tente novamente.");
     }
   }
 
@@ -184,7 +189,8 @@ Razão Social: ${element.razaoSocial}
   //Métodos de acesso privado à classe Console. Geralmente se tratam de funções
   //para reutilização interna com objetivo de reduzir repetições de código
 
-  String _inputSocio(String artigo, String input, Type tipo) {
+  //TODO: refatorar para receber string no lugar do tipo (analisar viabilidade)
+  String _input(String artigo, String input, Type tipo) {
     switch (tipo) {
       case Empresa:
         print("Digite $artigo $input da Empresa");
@@ -215,24 +221,25 @@ Razão Social: ${element.razaoSocial}
     String cidade;
     String estado;
 
-    if (tipo == Empresa) {
-    } else {}
-    logradouro = _inputSocio("o", "logradouro", tipo);
-    numero = int.tryParse(_inputSocio("o", "numero", tipo));
-    complemento = _inputSocio("o", "complemento", tipo);
-    bairro = _inputSocio("o", "bairro", tipo);
-    cidade = _inputSocio("a", "cidade", tipo);
-    estado = _inputSocio("as", "iniciais do Estado", tipo).toUpperCase();
+    //TODO: adicionar tratamento com base no tipo de entrada
+
+    logradouro = _input("o", "logradouro", tipo);
+    numero = int.tryParse(_input("o", "numero", tipo));
+    complemento = _input("o", "complemento", tipo);
+    bairro = _input("o", "bairro", tipo);
+    cidade = _input("a", "cidade", tipo);
+    estado = _input("as", "iniciais do Estado", tipo).toUpperCase();
 
     while (estado.length != 2) {
       print("Estado inválido. O Estado deve ser composto por apenas 2 letras.");
-      estado = _inputSocio("as", "iniciais do Estado", tipo).toUpperCase();
+      estado = _input("as", "iniciais do Estado", tipo).toUpperCase();
     }
-    String cep = _inputSocio("o", "CEP", tipo);
+
+    String cep = _input("o", "CEP", tipo);
     while (cep.length != 8) {
       print(
           "CEP inválido. O CEP deve conter 8 números inteiros, sem traços nem pontos");
-      cep = _inputSocio("o", "CEP", tipo);
+      cep = _input("o", "CEP", tipo);
     }
 
     return Endereco(
@@ -253,12 +260,12 @@ Razão Social: ${element.razaoSocial}
     Endereco endereco;
 
     if (type == SocioPF) {
-      nomeSocio = _inputSocio("o", "nome", SocioPF);
-      documentoSocio = _inputSocio("o", "CPF", SocioPF);
+      nomeSocio = _input("o", "nome", SocioPF);
+      documentoSocio = _input("o", "CPF", SocioPF);
       while (_validaCPF(documentoSocio)) {
         print(
             "CPF inválido. O CPF deve conter 11 numeros inteiros, sem pontos nem traços.");
-        documentoSocio = _inputSocio("o", "CPF", SocioPF);
+        documentoSocio = _input("o", "CPF", SocioPF);
       }
       endereco = _cadastraEndereco(SocioPF);
 
@@ -268,14 +275,14 @@ Razão Social: ${element.razaoSocial}
         endereco: endereco,
       );
     } else {
-      razaoSocial = _inputSocio("a", "Razão Social", SocioPJ);
-      nomeSocio = _inputSocio("o", "Nome Fantasia", SocioPJ);
-      documentoSocio = _inputSocio("o", "CNPJ", SocioPJ);
+      razaoSocial = _input("a", "Razão Social", SocioPJ);
+      nomeSocio = _input("o", "Nome Fantasia", SocioPJ);
+      documentoSocio = _input("o", "CNPJ", SocioPJ);
 
       while (_validaCNPJ(documentoSocio)) {
         print(
             "CNPJ inválido. O CNPJ deve ser composto por 14 numeros inteiros, sem pontos nem traços.");
-        documentoSocio = _inputSocio("o", "CNPJ", SocioPJ);
+        documentoSocio = _input("o", "CNPJ", SocioPJ);
       }
 
       endereco = _cadastraEndereco(SocioPJ);
@@ -300,6 +307,7 @@ Razão Social: ${element.razaoSocial}
     }
   }
 
+  //TODO: verificar por que não está funcionando essa validação
   bool _validaCPF(String input) {
     if (input.length != 11 || input.contains("-") || input.contains(".")) {
       return true;
