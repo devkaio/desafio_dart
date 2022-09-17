@@ -46,11 +46,5 @@ Escolha uma opção:
       default:
         print("Opção Inválida. Tente novamente");
     }
-
-    // if (opcao == "1") empresa1 = console.cadastrarEmpresa();
-
-    // if (opcao == "2") socio1 = console.cadastrarSocioPF();
-
-    // if (opcao == "6") console.mostrarDadosEmpresa(empresa1);
   }
 }
