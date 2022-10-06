@@ -7,7 +7,7 @@ import 'socio_pf.dart';
 import 'socio_pj.dart';
 
 class Console {
-  final List<Empresa> _listaEmpresas = [];
+  final List<Empresa> listaEmpresas = [];
 
   void cadastrarEmpresa() {
     print("\x1B[2J\x1B[0;0H");
@@ -40,7 +40,7 @@ class Console {
     while (input.isNotEmpty) {
       if (input == "1") {
         socio = _cadastrarSocio(SocioPF);
-        _listaEmpresas.add(
+        listaEmpresas.add(
           Empresa(
             cnpj,
             razaoSocial: razaoSocial,
@@ -53,7 +53,7 @@ class Console {
         break;
       } else if (input == "2") {
         socio = _cadastrarSocio(SocioPJ);
-        _listaEmpresas.add(
+        listaEmpresas.add(
           Empresa(
             cnpj,
             razaoSocial: razaoSocial,
@@ -75,7 +75,7 @@ class Console {
   void pesquisarEmpresaPorCNPJ() {
     print("\x1B[2J\x1B[0;0H");
 
-    if (_listaEmpresas.isEmpty) {
+    if (listaEmpresas.isEmpty) {
       print(
           "\nNão há empresas cadastradas no momento. Faça um cadastro antes de prosseguir.\n");
       return;
@@ -84,7 +84,7 @@ class Console {
     print("Digite o CNPJ da empresa que deseja pesquisar");
     final input = stdin.readLineSync()!;
 
-    for (var element in _listaEmpresas) {
+    for (var element in listaEmpresas) {
       if (element.cnpj == input) {
         mostrarDadosEmpresa(element);
       } else {
@@ -97,7 +97,7 @@ class Console {
   void pesquisarEmpresaPorSocio() {
     print("\x1B[2J\x1B[0;0H");
 
-    if (_listaEmpresas.isEmpty) {
+    if (listaEmpresas.isEmpty) {
       print(
           "\nNão há empresas cadastradas no momento. Faça um cadastro antes de prosseguir.\n");
       return;
@@ -106,13 +106,13 @@ class Console {
     print("Digite o CPF ou CNPJ do sócio da empresa que deseja pesquisar");
     final input = stdin.readLineSync()!;
     if (input.length == 11) {
-      for (var element in _listaEmpresas) {
+      for (var element in listaEmpresas) {
         if (element.socio!.documento == input) {
           mostrarDadosEmpresa(element);
         }
       }
     } else if (input.length == 14) {
-      for (var element in _listaEmpresas) {
+      for (var element in listaEmpresas) {
         if (element.socio!.documento == input) {
           mostrarDadosEmpresa(element);
         }
@@ -148,11 +148,11 @@ Endereço: ${empresa.socio?.endereco.logradouro}, ${empresa.socio?.endereco.nume
     //   print(element.razaoSocial);
     // });
 
-    _listaEmpresas.sort((a, b) => a.razaoSocial!.compareTo(b.razaoSocial!));
+    listaEmpresas.sort((a, b) => a.razaoSocial!.compareTo(b.razaoSocial!));
 
     print("Lista de Empresas Cadastradas:");
     //utilização do for para iteração de elementos de uma lista
-    for (var element in _listaEmpresas) {
+    for (var element in listaEmpresas) {
       print('''
 ID: ${element.id}
 CNPJ: ${element.cnpjFormatado} Data Cadastro: ${element.dataCriacao}
@@ -162,21 +162,20 @@ Razão Social: ${element.razaoSocial}
   }
 
   void excluirEmpresa(String empresaID) {
-    //TODO: resolver o problema de exluir item da lista
     print("\x1B[2J\x1B[0;0H");
 
-    if (_listaEmpresas.isEmpty) {
+    if (listaEmpresas.isEmpty) {
       print(
           "\nNão há empresas cadastradas no momento. Faça um cadastro antes de prosseguir.\n");
       return;
     }
 
-    for (var element in _listaEmpresas) {
+    for (var element in listaEmpresas) {
       if (element.id == empresaID) {
         print("Deseja realmente excluir a empresa ${element.razaoSocial}? S/N");
         final input = stdin.readLineSync()!;
         if (input == "s" || input == "S") {
-          _listaEmpresas.removeWhere((element) {
+          listaEmpresas.firstWhere((element) {
             return element.id == empresaID;
           });
 
